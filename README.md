@@ -19,8 +19,8 @@ See [Methology](#methology) for details
 
 We can explore e.g. the frequency of the winners of both cups
 
-![png](output_8_0.png)
-![png](output_9_0.png)
+![png](FIG/winners_w.png)
+![png](FIG/winners_m.png)
 
 Another Interesting option is to explore the medal positions. here are tho most common medal permutations for the women:
 
