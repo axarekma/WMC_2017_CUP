@@ -57,9 +57,9 @@ Counter(medals_m).most_common(10)
 ### Question : Is the seed relevant?
 To answere this, we can randomly shuffle the input ranks of the players and rerun the simulation. 
 
-![png](output_15_0.png) 
-![png](output_16_0.png)
-![png](output_17_0.png)
+![png](FIG/output_15_0.png) 
+![png](FIG/output_16_0.png)
+![png](FIG/output_17_0.png)
 
 Apart for the seeming dominance of Fredrik Persson in all permutations, the rest of the spots seem totally up for grabs, as we change the seeding of the table.
 
