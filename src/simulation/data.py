@@ -1,7 +1,7 @@
 import urllib.request
 from html.parser import HTMLParser
 import re
-from math import floor,ceil
+from math import floor, ceil
 from collections import defaultdict
 
 class MyHTMLParser(HTMLParser):
