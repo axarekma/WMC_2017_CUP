@@ -4,22 +4,42 @@ MC simulation of the matchplay
 # Monte carlo simulations of the cup finals
 Axel Ekman
 ## Introduction
-Since the emergence of the CUP system I have always been fascinated by the fact that it produces a totally aspect to the game. Last time I did one of these checks, I did not have the tools nor the knowledge to do any of this properly so it turned out to be a whimsical mess of manually extracting data from the results to calculate some key values of which I could make some posterior analysis of what it meant to be fair in the sense of lane choosing. 
+Since the emergence of the CUP system I have always been fascinated by the fact that it produces a totally aspect to the game. Last time I did one of these checks, I did not have the tools nor the knowledge to do any of this properly so it turned out to be a whimsical mess of manually extracting data from the results to calculate some key values of which I could make some estimate of who would be favoured in which match.
 
-Nowadays, with common tools available, scraping the BAMSE server for results is more or less a trivial task, meaning that I could finally properly play around with the endless pit of number crunching. Alas, I do have a day job, so there is a limit of both time and effort I could put into this project. Nevertheless, let's see if we can dig up something interesting!
+Nowadays, with common tools available, extracting data from [Bangolf Arena](http://www.isberginformation.com/eng/bangolfarena.htm) is more or less a trivial task, meaning that I could finally properly play around with the endless pit of number crunching. Alas, I do have a day job, so there is a limit of both time and effort I could put into this project. As a final disclaimer, i am not a CS major, nor a statistician and thus is most probable that the code is horrible, and the conclusions naive. Moreover, the amount of trials in the preliminary rounds is *way* to small, for any real statistical significance, thus many or all results should be taken with a grain of salt (many statistical test fail spectacularly with small N and true [unbiased](https://en.wikipedia.org/wiki/Unbiased_estimation_of_standard_deviation) estimators are rarely used).
+
+Nevertheless, let's see if we can dig up something interesting!
 
 ### Monte carlo simulations
-The idea behind this project was to do a Monte Carlo simulation on the CUP finals using the acquired data from the preliminary rounds as pools for random sampling. For those note familiar, [Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo_method) is just a fancy term for the usage of random sampling in computational problems. That is, for problems to complex for a analytical solution, it is often more simple to get a numerical solution using random sampling. For example, instead of carefully  measuring a die for perfect geometrical symmetry and balance, you can just throw it a 1000 times to see if it is biased.
+The idea behind this project was that, as the match play championship is preceded by the stroke play rounds, there is a substantial amount of data on the players' performance that could be used to try to predict the match play outcome. 
 
-## A priori predictions
-As  *a priori*, the best we can do is to predict how players should perform in the cup. For this we generate a large number of realizations of these random Cups.
+The obvious way to do this, is to do a Monte Carlo simulation on the CUP finals using the acquired data from the preliminary rounds as pools for random sampling. For those note familiar, [Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo_method) is a kind of umbrella term for a wide range of numerical methods, that rely on random sampling. That is, it is often more simple to get a numerical solution using random sampling. For example, the easiest way to determine if a die is *fair*, is to throw it 1000 times and log the result.
 
-See [Methology](#methology) for details
+The same is true for the match play game. As each game depends on separate probabilities for each lane, an analytical attempt to determine the probabilities of players advancing in the bracket reveals itself to be a very tedious task. In the age of computers, it is much simper to instead simulate the cup. 
+). 
+
+## Results of N random match play finals
+For the simulation of the match play, the players were placed in their respective positions in the bracket, and the matches were simulated by random sampling of all (including stroke play finals) the observed results for each of the lanes (see [Methology](#methology) for details). The matches were simulated with the correct starting lanes (which is relevant in e.g. the case of sudden death).
+
+In this way we get a collection of (I used 10000) possible outcomes of the match play finals nad can e.g. explore the frequency of the winners of both cups:
+
+![png](FIG/winners_w.png)
+![png](FIG/winners_m.png)
+
+At a glance, there is nothing special about the results, and the top favorites in both categories correlate quite well with their stroke play rank.
+
+There are, however, some interesting deviations, such as Dan Trulsson, rising from number 21 to the top ten, and Marek Smejkal, as a dark horse on rank 3! And where has Eva Molnarova disappeared? All the way down to rank 9! This is because the predicted result of match play is fundamentally different than stroke play. The difference between lane averages vs. lane victories.
 
 ### Lane averages
-The first thing we can check is how the cup system changes the expected outcome of the rankings. That is, as the matchplay is played counting lane wins, not averages, players with the same average score are not equally likely in the matchplay system. 
+An easy way to illustrate this is to think what happens if the result of two players are [2,2,2,2] and [1,1,1,5] respectively. Even if the average of both players are the same, player 2 will win 75% of the time in a match play setting. That is, in general, for players with the same average, the one with more variation has an advantage. 
 
-An easy way to illustrate this is to think of two players drawing from a population of the same average [2,2,2,2] and [1,1,1,5] respectively. Even if the average of both players are the same, player 2 will win 75% of the time in a matchplay setting. That is, in general, for players with the same average, the one with more variation has an advantage.
+That is, as the matchplay is played counting lane wins, not averages, players with the same average score are not equally likely in the matchplay system. Let us  check how the cup system changes the expected outcome of individual lanes.
+
+![png](FIG/lanes_all_Dan Trulsson.png)
+![png](FIG/lanes_cup_Dan Trulsson.png)
+
+![png](FIG/lanes_all_Walter Erlbruch.png)
+![png](FIG/lanes_cup_Walter Erlbruch.png)
 
 Here we show a [Normalized Lane Score](#normalized-lane-score) for the top10 in both the women's and men's category.
 
@@ -36,15 +56,9 @@ So who are the winners and losers in this deal?
 ![png](FIG/lanescores_w_diff.png)
 ![png](FIG/lanescores_m_diff.png)
 
-### Simulated cups
-As a full simulations, we do a MC simulation of the actual matchplay finals, that is, we can pair up the players with their actual opponents starting in the right lane, and advance the winner to the next place in the bracket. In this way we get a collection of (I used 10000) possible outcomes of the matchplay finals.
-
-We can explore e.g. the frequency of the winners of both cups
-
-![png](FIG/winners_w.png)
-![png](FIG/winners_m.png)
-
+### Bracket positioning
 Another Interesting option is to explore the medal positions. here are tho most common medal permutations for the women:
+
 
 ```python
 Counter(medals_w).most_common(10)
@@ -57,7 +71,7 @@ Counter(medals_w).most_common(10)
      (('Melanie Hammerschmidt', 'Karin Olsson', 'Vanessa Peuker'), 32)]
 ```
 
-And men
+And men 
 
 ```python
 Counter(medals_m).most_common(10)
@@ -75,10 +89,16 @@ Counter(medals_m).most_common(10)
      (('Fredrik Persson', 'Dan Trulsson', 'Ondrej Skaloud'), 5),
      (('Fredrik Persson', 'Reto Sommer', 'Dan Trulsson'), 5)]
 ```
+
+A very prominent feature is the we se an abundance of the result (Persson, X, Dahlstedt)
+
+Here we see the effect of the bracket seeding. The world champion Alexander Dahlstedt was unfortunate to be placed in the lower bracket, that of the eminent favorite Persson, meaning that even if, overall, he is the second most likely winner, it seems that losing to Persson in the semifinals is even more likely.
+
+
 ## A posterior analysis of the results
 So how did we do?
 
-The results are in teh book and the national hymns have been sung. It is easy to naively analyse the results by anecdotal evidence: The only 'correctly' predicted medal in the tournament was the Gold by Fredrik Persson. 1/6 does not seem stellar. We must however notice accept that the cup-system is inherently very volatile, and even though all matches contain 18 lanes, the results have historically been very rich in unexpected events. Additionally, there are many more factors than pure averages that go into each mach that is played. Things that a simple MC simulation cannot hope to predict.
+The results are in the book and the national hymns have been sung. It is easy to naively analyse the results by anecdotal evidence: The only 'correctly' predicted medal in the tournament was the Gold by Fredrik Persson. 1/6 does not seem stellar. We must however notice accept that the cup-system is inherently very volatile, and even though all matches contain 18 lanes, the results have historically been very rich in unexpected events. Additionally, there are many more factors than pure averages that go into each mach that is played. Things that a simple MC simulation cannot hope to predict.
 
 As a more rigorous approach, we can compare the predictions that the MC simulations does with other methods. In order to do so we can check the outcome for all the matches for both men and women. This is done using the correct starting lane of the mach.
 

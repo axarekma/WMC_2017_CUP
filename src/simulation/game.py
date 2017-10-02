@@ -56,14 +56,15 @@ class Game:
             print('Something went wrong')
     
 class Game_lanelog:
-    def __init__(self, p1,p2,lane,DATA,LANES):
+    def __init__(self, p1,p2,lane,DATA,LANES,resfunc):
         self.player1 = p1
         self.player2 = p2
 
         data_p1 = DATA[p1]
         data_p2 = DATA[p2]
         
-        self.score,self.lanelog = match_log(data_p1,data_p2,LANES, lane)
+        self.score,self.lanelog = match_log(
+            data_p1,data_p2,LANES, lane,resfunc)
 
 
     
