@@ -11,7 +11,7 @@ Nowadays, with common tools available, extracting data from [Bangolf Arena](http
 Nevertheless, let's see if we can dig up something interesting!
 
 ## Monte carlo simulations
-The idea behind this project was that, as the [match play championship](http://www.psvsteyr.at/MINIGOLF/2017-09-22_WC2017_Matchplay/result.htm) is preceded by the [stroke play](http://www.psvsteyr.at/MINIGOLF/2017-09-15_WC2017Zaton-Croatia/result.htm) rounds, there is a substantial amount of data on the players' performance that could be used to try to predict outcomes in the match play finals. 
+The idea behind this project was that, as the [match play](http://www.psvsteyr.at/MINIGOLF/2017-09-22_WC2017_Matchplay/result.htm) championship is preceded by the [stroke play](http://www.psvsteyr.at/MINIGOLF/2017-09-15_WC2017Zaton-Croatia/result.htm) rounds, there is a substantial amount of data on the players' performance that could be used to try to predict outcomes in the match play finals. 
 
 The obvious way to do this, is to do a Monte Carlo simulation on the CUP finals using the acquired data from the preliminary rounds as pools for random sampling. For those note familiar, [Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo_method) is kind of an umbrella term for a wide range of numerical methods, which rely on random sampling. That is, it is often more simple to get a numerical solution using random sampling. For example, the easiest way to determine if a die is fair, is to throw it 1000 times and log the result.
 
