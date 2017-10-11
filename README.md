@@ -1,50 +1,47 @@
 # WMC_2017_CUP
-MC simulation of the matchplay
+MC simulation of the match play finals.
 
 # Monte carlo simulations of the cup finals
 Axel Ekman
 ## Introduction
 Since the emergence of the CUP system I have always been fascinated by the fact that it produces a totally aspect to the game. Last time I did one of these checks, I did not have the tools nor the knowledge to do any of this properly so it turned out to be a whimsical mess of manually extracting data from the results to calculate some key values of which I could make some estimate of who would be favoured in which match.
 
-Nowadays, with common tools available, extracting data from [Bangolf Arena](http://www.isberginformation.com/eng/bangolfarena.htm) is more or less a trivial task, meaning that I could finally properly play around with the endless pit of number crunching. Alas, I do have a day job, so there is a limit of both time and effort I could put into this project. As a final disclaimer, i am not a CS major, nor a statistician and thus is most probable that the code is horrible, and the conclusions naive. Moreover, the amount of trials in the preliminary rounds is *way* to small, for any real statistical significance, thus many or all results should be taken with a grain of salt (many statistical test fail spectacularly with small N and true [unbiased](https://en.wikipedia.org/wiki/Unbiased_estimation_of_standard_deviation) estimators are rarely used).
+Nowadays, with common tools available, extracting data from [Bangolf Arena](http://www.isberginformation.com/eng/bangolfarena.htm) is more or less a trivial task, meaning that I could finally properly play around with the endless pit of number crunching. Alas, I do have a day job, so there is a limit of both time and effort I could put into this project. As a final disclaimer, i am not a CS major, nor a statistician and thus is most probable that the code is horrible, and the conclusions naive. Moreover, the amount of trials in the preliminary rounds is *way* to small, for any real statistical significance, thus many or all results should be taken with a grain of salt.
 
 Nevertheless, let's see if we can dig up something interesting!
 
 ## Monte carlo simulations
-The idea behind this project was that, as the match play championship is preceded by the stroke play rounds, there is a substantial amount of data on the players' performance that could be used to try to predict the match play outcome. 
+The idea behind this project was that, as the [match play championship](http://www.psvsteyr.at/MINIGOLF/2017-09-22_WC2017_Matchplay/result.htm) is preceded by the [stroke play](http://www.psvsteyr.at/MINIGOLF/2017-09-15_WC2017Zaton-Croatia/result.htm) rounds, there is a substantial amount of data on the players' performance that could be used to try to predict outcomes in the match play finals. 
 
-The obvious way to do this, is to do a Monte Carlo simulation on the CUP finals using the acquired data from the preliminary rounds as pools for random sampling. For those note familiar, [Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo_method) is a kind of umbrella term for a wide range of numerical methods, that rely on random sampling. That is, it is often more simple to get a numerical solution using random sampling. For example, the easiest way to determine if a die is *fair*, is to throw it 1000 times and log the result.
-
+The obvious way to do this, is to do a Monte Carlo simulation on the CUP finals using the acquired data from the preliminary rounds as pools for random sampling. For those note familiar, [Monte Carlo](https://en.wikipedia.org/wiki/Monte_Carlo_method) is kind of an umbrella term for a wide range of numerical methods, which rely on random sampling. That is, it is often more simple to get a numerical solution using random sampling. For example, the easiest way to determine if a die is fair, is to throw it 1000 times and log the result.
 
 ### Single game
-The same is true for the match play game. As each game depends on separate probabilities for each lane, an analytical attempt to determine the probabilities of players advancing in the bracket reveals itself to be a very tedious task. In the age of computers, it is much simper to instead simulate the cup. We can generate copious amounts of realizations for single matches. Tallying up the scores, this gives us predictions of the outcome of the score for each match. 
+The same is true for the match play game. As each game depends on separate probabilities for each lane, an analytical attempt to determine the probabilities of players advancing in the bracket reveals itself to be a very tedious task. In the age of computers, it is much simper to instead simulate the cup. We can generate copious amounts of realizations for single matches and tallying up the scores, this gives us predictions of the outcome of the score for each match. 
 
-As en example, here is a heat-map of all the observed scores, where the colour represents the frequency of the outcome for the finals of both Cups, both including 10000 realizations:
+As en example, for the finals of both Cups, here is the heat maps of all the observed scores, where the colour represents the frequency of the outcomes taken from 10000 realizations:
 
 ![png](FIG/eva_molnarova_maja_wicki_e1.png)
 ![png](FIG/ondrej_skaloud_fredrik_persson_e1.png)
 
-
 ### Results of N random match play finals
-Instead of repeating a single match n time, we can instead initialize the cup bracket and run the whole tournament n times. For the simulation of the match play, the players were placed in their respective positions in the bracket, and the matches were simulated by random sampling of all (including stroke play finals) the observed results for each of the lanes (see [Methology](#methology) for details). The matches were simulated with the correct starting lanes (which is relevant in e.g. the case of sudden death).
+Instead of repeating a single match *n* times, we can instead initialize the cup bracket and run the whole tournament *n* times. For the simulation of the match play, the players were placed in their respective positions in the bracket, and the matches were simulated by random sampling of all (including the stroke play finals) the observed results for each of the lanes (see [Methology](#methology) for details). The matches were simulated with the correct starting lanes, which is relevant in *e.g.* the case of sudden death.
 
-In this way we get a collection of possible outcomes of the match play finals nad can e.g. explore the frequency of the winners of both cups: 
+In this way we get a collection of possible outcomes of the match play finals and can e.g. explore the frequency of the winners of both cups: 
 
 ![png](FIG/winners_w.png)
 ![png](FIG/winners_m.png)
 
 At a glance, there is nothing special about the results, and the top favorites in both categories correlate quite well with their stroke play rank.
 
-There are, however, some interesting deviations, such as Dan Trulsson, rising from number 21 to the top ten, and Marek Smejkal, as a dark horse on rank 3! And where has Eva Molnarova disappeared? All the way down to rank 9! This is because the predicted result of match play is fundamentally different than stroke play. The difference between lane averages vs. lane victories.
+There are, however, some interesting deviations, such as Dan Trulsson, rising from number 21 to the top ten, and Marek Smejkal, as a dark horse on rank 3! And where has Eva Molnarova disappeared? All the way down to rank 9. This is because the predicted result of match play is fundamentally different than stroke play. The difference between lane averages vs. lane victories.
 
 ## Lane averages
-An easy way to illustrate this is to think what happens if the result of two players are [2,2,2,2] and [1,1,1,5] respectively. Even if the average of both players are the same, player 2 will win 75% of the time in a match play setting. That is, in general, for players with the same average, the one with more variation has an advantage. 
+As the scores are determined by lane victories only, there is a distinct difference in how lane results affect the predicted outcome in contrast to the stroke play. An easy way to illustrate this is to think what happens if the result of two players are [2,2,2,2] and [1,1,1,5] respectively. Even if the average of both players are the same, player 2 will win 75% of the time in a match play setting. That is, in general, for players with the same average, the one with more variation has an advantage. 
 
-That is, as the matchplay is played counting lane wins, not averages, players with the same average score are not equally likely in the matchplay system. Let us  check how the cup system changes the expected outcome of individual lanes.
+That is, as the match play is played counting lane wins, not averages, players with the same average score are not equally likely in the match play system.
 
 So as an example, let us check two of the big movers in the cup system. Dan Trulsson and Walter Erlbruch.
-I calculated the average lane score using both the mean result and random sampling to determine the lane result. This was obtained against all other players in the cup finals (1000 times for the random sampling).
-
+I calculated the average lane score using both the mean result and random sampling to determine the lane result. This score shows the average result for the player over several matches. This was obtained against all other players in the cup finals ( with *n = 1000* for the random sampling). On the top I also show the match outcome calculated from these average results.
 
 ![png](FIG/lanes_all_dan_trulsson.png)
 ![png](FIG/lanes_cup_dan_trulsson.png)
@@ -53,7 +50,13 @@ From Dans result we see, that even if he was in the bottom half of the bracket h
 
 Furthermore, the example described in the beginning even gets exactly reproduced, as the result for gentleman (F13) flips from a severe underdog, to a slight favorite with his [1,1,5,1] score.
 
-As a counter example one would think that Walter (ranked 6th after strokeplay) woudl eb better of against the field. This is not the case, and applying a matchplay score agaist the field results in similar scores than for Dan. Things get even worse after half of the lanes are taken out, as they are all the wrong ones, after which he is dead even against the field.
+As a counter example one would think that Walter (ranked 6th after stroke play) would be better of against the field. This is not the case, and applying a match play score against the field results in similar scores than for Dan. 
+
+![png](FIG/lanes_all_walter_erlbruch.png)
+
+Things get even worse after half of the lanes are taken out, as they are all the wrong ones, after which he is dead even against the field.
+
+![png](FIG/lanes_cup_walter_erlbruch.png)
 
 The effect of this can also be investigated. So who are the winners and losers in this deal? Let us see:
 
@@ -129,13 +132,13 @@ The sampling population of this numerical fiddling is horrible, indeed. Another 
 
 The question now arises, is there a subset of games, for which the predictions are more accurate?
 
-To check this, we can collect all the predictions for which the MC simulations gives a probability over a certain threshold, and plot the success of the prediction in these cases.
-
-N.B, the number of samples is still quite small, so I have included somewhat 'generous' .9 [confidence bounds](https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval) for illustrative purposes. Here the two red lines represent the success rate of the predictions (the straight line using simply the mean of the lane results) with their confidence bounds in blue and orange respectively.
+To check this, we can collect all the predictions for which the MC simulations gives a probability over a certain threshold, and plot the success of the prediction in these cases. *I.e.* at a certain threshold, say 0.6, we ignore all the matches for which the MC simulation gives a probability less than 0.6. Simultaneously also the number of total observations meeting the criteria is lower. By normalizing the correct prediction with the total number of matches meeting the criterion we get a normalized accuracy for our method with respect to the probability threshold.
 
 ![png](FIG/th_pred_w.png)
 ![png](FIG/th_pred_m.png)
 ![png](FIG/th_pred_mw.png)
+
+*N.B*, the number of samples is still quite small, so I have included somewhat 'generous' .9 [confidence bounds](https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval) for illustrative purposes. Here the two red lines represent the success rate of the predictions (the straight line using simply the mean of the lane results) with their confidence bounds in blue and orange respectively.
 
 Well this looks somewhat meaningful. The results are systematically better than looking at the average, although, to be fair, for the women's matches it worked worse than a coin toss. When the sample size increases one can see somewhat a trend emerging, and indeed, in general there seems to be a slight correlation (with a correlation coefficient r = 0.57 for all thresholds with over 10 matches) between the confidence of the prediction and the result.
 
