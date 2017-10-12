@@ -6,7 +6,7 @@ Axel Ekman
 ## Introduction
 I have long wanted to do a numerical analysis on the match play system and since the emergence of the CUP system I have always wondered how well the results correlate with the previous performance of the players. Last time I did one of these checks, I did not have the tools nor the knowledge to do any of this properly so it turned out to be a whimsical mess of manually extracting data from the results to calculate some key values of which I could make some estimate of who would be favoured in which match.
 
-Nowadays, with common tools available, extracting data from [Bangolf Arena](http://www.isberginformation.com/eng/bangolfarena.htm) is more or less a trivial task, meaning that I could finally properly play around with the endless pit of number crunching. Alas, I do have a day job, so there is a limit of both time and effort I could put into this project. As a final disclaimer, I am not a CS major, nor a statistician and thus,it is most probable that the code is horrible, and the conclusions naive. Moreover, the amount of trials in the preliminary rounds is *way* to small, for any real statistical significance, thus many or all results should be taken with a grain of salt.
+Nowadays, with common tools available, extracting data from [Bangolf Arena](http://www.isberginformation.com/eng/bangolfarena.htm) is more or less a trivial task, meaning that I could finally properly play around with the endless pit of number crunching. Alas, I do have a day job, so there is a limit of both time and effort I could put into this project. As a final disclaimer, I am not a CS major, nor a statistician and thus,it is most probable that the code is horrible, and the conclusions naïve. Moreover, the amount of trials in the preliminary rounds is *way* to small, for any real statistical significance, thus many or all results should be taken with a grain of salt.
 
 Nevertheless, let's see if we can dig up something interesting!
 
@@ -37,17 +37,16 @@ At a glance, there is nothing special about the results, and the top favorites i
 There are, however, some interesting deviations, such as Dan Trulsson, rising from number 21 to the top ten, and Marek Smejkal, as a dark horse on rank 3! And where has Eva Molnarova disappeared? All the way down to rank 9. This has much to do because the predicted result of match play is fundamentally different than stroke play - the difference of lane averages vs. lane victories.
 
 ## Lane averages
-As the scores are determined by lane victories only, there is a distinct difference in how lane results affect the predicted outcome in contrast to the stroke play. An easy way to illustrate this is to think what happens if the result of two players are [2,2,2,2] and [1,1,1,5] respectively. Even if the average of both players are the same, player 2 will win 75% of the time in a match play setting. That is, in general, for players with the same average, the one with more variation has an advantage. 
+As the scores are determined by lane victories only, there is a distinct difference in how lane results affect the predicted outcome in contrast to the stroke play. An easy way to illustrate this is to think what happens to two players with lane scores [2,2,2,2] and [1,1,1,5] respectively. Even if the average of both players are the same, player 2 will win 75% of the time in a match play setting. That is, in general, for players with the same average, the one with more variation has an advantage. 
 
-That is, as the match play is played counting lane wins, not averages, players with the same average score are not equally likely in the match play system.
+That is, as the match play is played counting lane wins, not averages, players with the same average score are not equally likely in the match play system .So as an example, let us check two of the big movers in the cup system. Dan Trulsson and Walter Erlbruch.
 
-So as an example, let us check two of the big movers in the cup system. Dan Trulsson and Walter Erlbruch.
-I calculated the average lane score using both the mean result and random sampling to determine the lane result. This score shows the average result for the player over several matches. This was obtained against all other players in the cup finals ( with *n = 1000* for the random sampling). On the top I also show the match outcome calculated from these average results.
+For this I calculated the average lane score using both the mean result and random sampling to determine the lane result. From each match we can get an average points scored for each lane. This was obtained against all other players in the cup finals ( with *n = 10000* for the random sampling). On the top I also show the match outcome calculated from these average results.
 
 ![png](FIG/lanes_all_dan_trulsson.png)
 ![png](FIG/lanes_cup_dan_trulsson.png)
 
-From Dans result we see, that even if he was in the bottom half of the bracket he is clearly favoured against the field both using the mean and the random sampling. This has to do with the relative variance of the scores.
+From Dans result we see, that even if he was in the bottom half of the bracket he is clearly favoured against the field both using the mean (higher variance in lanes) and the random sampling (higher variance in the single scores).
 
 Furthermore, the example described in the beginning even gets exactly reproduced, as the result for gentleman (F13) flips from a severe underdog, to a slight favorite with his [1,1,5,1] score.
 
@@ -88,7 +87,7 @@ An interesting observation is that even if Karin Olsson is the overwhelming favo
 
 Oh My! What a plot twist! The roles are completely reversed.
 
-Another kind of bracket effect can be seen from the men:
+Another effect of bracket positioning can be seen from the men:
 
 | Gold | Silver  | Bronze | Freq |
 | --------------------- | -----| ----| --:|
@@ -108,7 +107,7 @@ A very prominent feature is the we se an abundance of the result (Persson, X, Da
 ## A posterior analysis of the results
 The results are in the book, so how did we do?
 
-It is easy to naively analyse the results by anecdotal evidence: The only 'correctly' predicted medal in the tournament was the Gold by Fredrik Persson. 1/6 does not seem stellar. We must however notice accept that the cup-system is inherently very volatile, and even though all matches contain 18 lanes, the results have historically been very rich in unexpected events. Additionally, there are many more factors than pure averages that go into each mach that is played. Things that a simple MC simulation cannot hope to predict.
+It is easy to naïvely analyse the results by anecdotal evidence: The only 'correctly' predicted medal in the tournament was the Gold by Fredrik Persson. 1/6 does not seem stellar. We must however notice accept that the cup-system is inherently very volatile, and even though all matches contain 18 lanes, the results have historically been very rich in unexpected events, which is also reflected by the relatively small probability of any single outcome. Additionally, there are many more factors than pure averages that go into each mach that is played. Things that a simple MC simulation cannot hope to predict.
 
 As a more rigorous approach, we can compare the predictions that the MC simulations does with other methods. In order to do so we can check the outcome for all the matches for both men and women. This is done using the correct starting lane of the mach.
 
@@ -126,14 +125,14 @@ Results, men:
     Mean prediction: 18/32
     Random Sampling prediction: 21/32
 
-Well, the results are not stellar. One could say that we systematically (5/6) at least perform better than a coin flip, but it is nontrivial to say whether this could just be normal variation.
+Well, the results are not stellar. One could say that we systematically at least perform better than a coin flip, but it is nontrivial to say whether this could just be normal variation.
 
 ### A more meaningful predictor
-The sampling population of this numerical fiddling is horrible, indeed. Another problem is, that for the coin flip cases (the matches when the result is predicted to be nearly 50/50), there is no reason why the MC prediction should be statistically meaningful as the game involves many hidden variables.
+The sampling population of this numerical fiddling is horrible, indeed. Another problem is, that for the coin flip cases (the matches when the result is predicted to be nearly 50/50), there is no reason why the Monte Carlo prediction should be statistically meaningful as the game involves many hidden variables.
 
 The question now arises, is there a subset of games, for which the predictions are more accurate?
 
-To check this, we can collect all the predictions for which the MC simulations gives a probability over a certain threshold, and plot the success of the prediction in these cases. *I.e.* at a certain threshold, say 0.6, we ignore all the matches for which the MC simulation gives a probability less than 0.6. Simultaneously also the number of total observations meeting the criteria is lower. By normalizing the correct prediction with the total number of matches meeting the criterion we get a normalized accuracy for our method with respect to the probability threshold.
+To check this, we can collect all the predictions for which the simulations gives a probability over a certain threshold, and plot the success of the prediction in these cases. *I.e.* at a certain threshold, say 0.6, we ignore all the matches for which the MC simulation gives a probability less than 0.6. Simultaneously also the number of total observations meeting the criteria is lower. By normalizing the correct prediction with the total number of matches meeting the criterion we get a normalized accuracy for our method with respect to the probability threshold.
 
 ![png](FIG/th_pred_w.png)
 ![png](FIG/th_pred_m.png)
@@ -141,7 +140,7 @@ To check this, we can collect all the predictions for which the MC simulations g
 
 *N.B*, the number of samples is still quite small, so I have included somewhat 'generous' .9 [confidence bounds](https://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval) for illustrative purposes. Here the two red lines represent the success rate of the predictions (the straight line using simply the mean of the lane results) with their confidence bounds in blue and orange respectively.
 
-Well this looks somewhat meaningful. The results are systematically better than looking at the average, although, to be fair, for the women's matches it worked worse than a coin toss. When the sample size increases one can see somewhat a trend emerging, and indeed, in general there seems to be a slight correlation (with a correlation coefficient r = 0.57 for all thresholds with over 10 matches) between the confidence of the prediction and the result.
+Well this looks somewhat meaningful. The results are systematically better than looking at the average, although, to be fair, for the women's matches it worked worse than a coin toss. When the sample size increases one can see somewhat a trend emerging, and indeed, in general there seems to be a slight correlation (with a correlation coefficient r = 0.6 for all thresholds with over 10 matches) between the confidence of the prediction and the result.
 
 ## Appendix: Methology
 
