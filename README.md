@@ -4,8 +4,7 @@ MC simulation of the match play finals.
 # Monte carlo simulations of the cup finals
 Axel Ekman
 ## Introduction
-I have long wanted to do a numerical analysis on the match play system. 
-Since the emergence of the CUP system I have always wondered how well the results correlate with the previous performance of the players. Last time I did one of these checks, I did not have the tools nor the knowledge to do any of this properly so it turned out to be a whimsical mess of manually extracting data from the results to calculate some key values of which I could make some estimate of who would be favoured in which match.
+I have long wanted to do a numerical analysis on the match play system and since the emergence of the CUP system I have always wondered how well the results correlate with the previous performance of the players. Last time I did one of these checks, I did not have the tools nor the knowledge to do any of this properly so it turned out to be a whimsical mess of manually extracting data from the results to calculate some key values of which I could make some estimate of who would be favoured in which match.
 
 Nowadays, with common tools available, extracting data from [Bangolf Arena](http://www.isberginformation.com/eng/bangolfarena.htm) is more or less a trivial task, meaning that I could finally properly play around with the endless pit of number crunching. Alas, I do have a day job, so there is a limit of both time and effort I could put into this project. As a final disclaimer, I am not a CS major, nor a statistician and thus,it is most probable that the code is horrible, and the conclusions naive. Moreover, the amount of trials in the preliminary rounds is *way* to small, for any real statistical significance, thus many or all results should be taken with a grain of salt.
 
@@ -24,6 +23,7 @@ As en example, for the finals of both Cups, here is the heat maps of all the obs
 ![png](FIG/eva_molnarova_maja_wicki_e1.png)
 ![png](FIG/ondrej_skaloud_fredrik_persson_e1.png)
 
+
 ### Results of N random match play finals
 Instead of repeating a single match *n* times, we can instead initialize the cup bracket and run the whole tournament *n* times. For the simulation of the match play, the players were placed in their respective positions in the bracket, and the matches were simulated by random sampling of all (including the stroke play finals) the observed results for each of the lanes (see [Methology](#methology) for details). The matches were simulated with the correct starting lanes, which is relevant in *e.g.* the case of sudden death.
 
@@ -34,7 +34,7 @@ In this way we get a collection of possible outcomes of the match play finals an
 
 At a glance, there is nothing special about the results, and the top favorites in both categories correlate quite well with their stroke play rank.
 
-There are, however, some interesting deviations, such as Dan Trulsson, rising from number 21 to the top ten, and Marek Smejkal, as a dark horse on rank 3! And where has Eva Molnarova disappeared? All the way down to rank 9. This is because the predicted result of match play is fundamentally different than stroke play. The difference between lane averages vs. lane victories.
+There are, however, some interesting deviations, such as Dan Trulsson, rising from number 21 to the top ten, and Marek Smejkal, as a dark horse on rank 3! And where has Eva Molnarova disappeared? All the way down to rank 9. This has much to do because the predicted result of match play is fundamentally different than stroke play - the difference of lane averages vs. lane victories.
 
 ## Lane averages
 As the scores are determined by lane victories only, there is a distinct difference in how lane results affect the predicted outcome in contrast to the stroke play. An easy way to illustrate this is to think what happens if the result of two players are [2,2,2,2] and [1,1,1,5] respectively. Even if the average of both players are the same, player 2 will win 75% of the time in a match play setting. That is, in general, for players with the same average, the one with more variation has an advantage. 
